@@ -5,11 +5,12 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import {Box} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Cat} from "../types/cat";
 
 interface Props {
 	isFavorite?: boolean;
-	cat: any;
-	onRemove: (i: any) => void;
+	cat: Cat;
+	onRemove: (i: Cat) => void;
 }
 export default function CatItem(props: Props) {
 	const {isFavorite, onRemove, cat} = props;
@@ -32,11 +33,11 @@ export default function CatItem(props: Props) {
 					borderWidth: "5px",
 					borderColor: "red",
 					width: "100%",
-
+					height: "350px",
 					position: "relative",
 				}}>
 				<img
-					src="https://29.media.tumblr.com/tumblr_krvvj0ZbSA1qa9hjso1_1280.jpg"
+					src={cat.url}
 					style={{
 						objectFit: "cover",
 						width: "100%",
