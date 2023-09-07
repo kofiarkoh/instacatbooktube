@@ -11,7 +11,14 @@ import "animate.css";
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang="en">
-			<ThemeProvider theme={createTheme()}>
+			<ThemeProvider
+				theme={createTheme({
+					palette: {
+						primary: {
+							main: "rgba(98, 204, 109, 1)",
+						},
+					},
+				})}>
 				<body>{children}</body>
 			</ThemeProvider>
 		</html>

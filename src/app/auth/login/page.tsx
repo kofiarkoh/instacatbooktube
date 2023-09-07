@@ -49,7 +49,16 @@ export default function Page() {
 					<TextField id="" label="" sx={{width: "100%"}} />
 				</div>
 				<div>
-					<Button variant="contained" sx={{width: "100%", mt: 4}}>
+					<Button
+						variant="contained"
+						sx={{
+							width: "100%",
+							height: "60px",
+							mt: 4,
+							color: "white",
+							textTransform: "capitalize",
+							fontSize: "18px",
+						}}>
 						Sign In
 					</Button>
 				</div>
