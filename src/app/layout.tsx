@@ -4,7 +4,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
-
+import "./globals.css";
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang="en">
