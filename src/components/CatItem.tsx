@@ -6,8 +6,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import {Box} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-export default function CatItem() {
-	let isFavorite = true;
+interface Props {
+	isFavorite?: boolean;
+}
+export default function CatItem(props: Props) {
+	const {isFavorite} = props;
 	return (
 		<Box
 			sx={{
@@ -48,7 +51,7 @@ export default function CatItem() {
 					color="inherit"
 					sx={{padding: 4}}
 					aria-label="favorite">
-					{!isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+					{isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 				</IconButton>
 			</Box>
 		</Box>
