@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, {useState} from "react";
-import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import {Box} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Box} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Skeleton from "@mui/material/Skeleton";
+import {useState} from "react";
 import {Cat} from "../types/cat";
 
 interface Props {
@@ -71,5 +72,12 @@ export default function CatItem(props: Props) {
 				</Box>
 			</Box>
 		</div>
+	);
+}
+export function CatItemSkeleton() {
+	return (
+		<>
+			<Skeleton animation="wave" width="100%" height="350px" />
+		</>
 	);
 }
