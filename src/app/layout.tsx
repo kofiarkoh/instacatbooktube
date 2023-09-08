@@ -20,6 +20,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 							primary: {
 								main: "rgba(98, 204, 109, 1)",
 							},
+							error: {
+								main: "rgba(204, 136, 98, 1)",
+							},
 						},
 					})}>
 					<body>{children}</body>
