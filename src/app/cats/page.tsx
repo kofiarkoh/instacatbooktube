@@ -7,13 +7,31 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import {useEffect} from "react";
-import {useLazyGetCatsQuery} from "../../redux/rtk/catsApi";
+import {
+	useLazyGetCatsQuery,
+	useMarkCatAsFavouriteMutation,
+} from "../../redux/rtk/catsApi";
 import {useRouter} from "next/navigation";
+import {Cat} from "../../types/cat";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
-
+	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
+		useMarkCatAsFavouriteMutation();
 	const router = useRouter();
+
+	const addToFavourite = (cat: Cat) => {
+		markCatAsFavorite({
+			image_id: cat.id,
+		})
+			.then((r) => {
+				console.log("cat set as fav");
+			})
+			.catch((e) => {
+				console.log("failed to set cat as favorite");
+			});
+	};
+
 	const goToFavorites = () => {
 		router.push("/cats/favorites");
 	};
@@ -57,7 +75,7 @@ export default function Page(props: any) {
 								<>
 									{cats.map((i) => (
 										<Grid key={i.id} item xs={12} sm={12} md={4} lg={4}>
-											<CatItem cat={i} />
+											<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
 										</Grid>
 									))}
 								</>

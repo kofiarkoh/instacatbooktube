@@ -11,19 +11,26 @@ import {Cat} from "../types/cat";
 interface Props {
 	isFavorite?: boolean;
 	cat: Cat;
-	onRemove: (i: Cat) => void;
+	onRemove?: (i: Cat) => void;
+	onMarkAsFavourite?: (i: Cat) => void;
 }
 export default function CatItem(props: Props) {
-	const {isFavorite, onRemove, cat} = props;
+	const {isFavorite, onRemove, cat, onMarkAsFavourite} = props;
 	const [animate, setAnimate] = useState(false);
 
 	const handleRemoval = () => {
-		setTimeout(() => {
-			setAnimate(true);
-		}, 3000);
-		setTimeout(() => {
-			onRemove(cat);
-		}, 4000);
+		if (isFavorite) {
+			if (onRemove) {
+				setTimeout(() => {
+					setAnimate(true);
+				}, 3000);
+				setTimeout(() => {
+					onRemove(cat);
+				}, 4000);
+			}
+		} else {
+			onMarkAsFavourite && onMarkAsFavourite(cat);
+		}
 	};
 	return (
 		<div className={animate ? "animate__animated animate__fadeOutLeft" : ""}>

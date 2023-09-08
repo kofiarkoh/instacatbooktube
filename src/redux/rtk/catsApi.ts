@@ -20,9 +20,20 @@ export const catsApi = baseApi.injectEndpoints({
 			}),
 			providesTags: ["favouriteCats"],
 		}),
-		
+		markCatAsFavourite: build.mutation({
+			query: (payload) => ({
+				url: "favourites",
+				method: "POST",
+				body: payload,
+			}),
+			invalidatesTags: ["favouriteCats"],
+		}),
 	}),
-	overrideExisting:true
+	overrideExisting: true,
 });
 
-export const {useLazyGetCatsQuery, useLazyGetFavouriteCatsQuery} = catsApi;
+export const {
+	useLazyGetCatsQuery,
+	useLazyGetFavouriteCatsQuery,
+	useMarkCatAsFavouriteMutation,
+} = catsApi;
