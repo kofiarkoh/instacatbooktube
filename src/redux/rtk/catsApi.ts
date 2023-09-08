@@ -14,7 +14,13 @@ export const catsApi = baseApi.injectEndpoints({
 			}),
 			providesTags: ["cats"],
 		}),
+		getFavouriteCats: build.query<Cat[], any>({
+			query: () => ({
+				url: "favorites",
+			}),
+			providesTags: ["favouriteCats"],
+		}),
 	}),
 });
 
-export const {useLazyGetCatsQuery} = catsApi;
+export const {useLazyGetCatsQuery, useLazyGetFavouriteCatsQuery} = catsApi;
