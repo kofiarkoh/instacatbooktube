@@ -5,14 +5,30 @@ import BackArrow from "@/assets/images/back_arrow.svg";
 import FavoriteIcon from "@/assets/images/heart.svg";
 import Grid from "@mui/material/Unstable_Grid2";
 import CatItem from "@/components/CatItem";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {FormikHelpers} from "formik";
+import {updateToken} from "@/redux/tokenSlice";
+import {Cat} from "../../../types/cat";
+import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
 
 export default function Page(props: any) {
-	const [favorites, setFavorites] = useState([1, 2, 3, 4, 5]);
+	const [getFavouriteCats, {isLoading, data: favorites}] =
+		useLazyGetFavouriteCatsQuery();
 
-	const removeFromFavorites = (item: number) => {
-		setFavorites(favorites.filter((i) => i !== item));
+	const handleGetFavourites = () => {
+		getFavouriteCats({})
+			.unwrap()
+			.then((response: Cat[]) => {})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
+
+	const removeFromFavorites = (item: Cat) => {};
+
+	useEffect(() => {
+		handleGetFavourites();
+	}, []);
 	return (
 		<>
 			<Navbar>
@@ -28,11 +44,21 @@ export default function Page(props: any) {
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{favorites.map((i) => (
-						<Grid key={i} item={true} xs={12} sm={12} md={4} lg={4}>
-							<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
-						</Grid>
-					))}
+					{favorites ? (
+						<>
+							{favorites.map((i) => (
+								<Grid key={i.image} item={true} xs={12} sm={12} md={4} lg={4}>
+									<CatItem
+										isFavorite={true}
+										cat={i.image}
+										onRemove={removeFromFavorites}
+									/>
+								</Grid>
+							))}
+						</>
+					) : (
+						<>nno</>
+					)}
 				</Grid>
 			</div>
 		</>
