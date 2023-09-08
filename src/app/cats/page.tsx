@@ -8,9 +8,15 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import {useEffect} from "react";
 import {useLazyGetCatsQuery} from "../../redux/rtk/catsApi";
+import {useRouter} from "next/navigation";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
+
+	const router = useRouter();
+	const goToFavorites = () => {
+		router.push("/cats/favorites");
+	};
 
 	useEffect(() => {
 		getCats({});
@@ -22,7 +28,12 @@ export default function Page(props: any) {
 					<LogoutIcon />
 				</IconButton>
 				<NavbarTitle />
-				<IconButton size="large" edge="start" color="inherit" aria-label="log out">
+				<IconButton
+					size="large"
+					edge="start"
+					color="inherit"
+					aria-label="favorites"
+					onClick={goToFavorites}>
 					<FavoriteIcon />
 				</IconButton>
 			</Navbar>
