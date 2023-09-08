@@ -5,9 +5,11 @@ import {
 } from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {baseApi} from "./rtk/baseApi";
+import tokenSlice from "./tokenSlice";
 
 export const rootReducer = combineReducers({
 	[baseApi.reducerPath]: baseApi.reducer,
+	tokenState: tokenSlice,
 });
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
