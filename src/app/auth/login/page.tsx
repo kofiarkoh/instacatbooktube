@@ -54,7 +54,7 @@ export default function Page() {
 					</IconRow>
 				</div>
 				<Formik
-					initialValues={{email: "", password: ""}}
+					initialValues={{apikey: ""}}
 					validationSchema={valdiationSchema}
 					validateOnBlur={false}
 					validateOnMount={false}
