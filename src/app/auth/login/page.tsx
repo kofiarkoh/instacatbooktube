@@ -7,8 +7,16 @@ import InstaIcon from "@/assets/images/insta.svg";
 import CatIcon from "@/assets/images/cat.svg";
 import BookIcon from "@/assets/images/book.svg";
 import YoutubeIcon from "@/assets/images/tube.svg";
+import {Formik, FormikHelpers} from "formik";
+import * as Yup from "yup";
+import FormTextField from "../../../components/form/FormTextField";
+import SubmitButton from "../../../components/form/SubmitButton";
 
+const valdiationSchema = Yup.object().shape({
+	apikey: Yup.string().required(),
+});
 export default function Page() {
+	const handleLogin = () => {};
 	return (
 		<div
 			style={{
@@ -45,23 +53,28 @@ export default function Page() {
 						</div>
 					</IconRow>
 				</div>
-				<div>
-					<TextField id="" label="" sx={{width: "100%"}} />
-				</div>
-				<div>
-					<Button
-						variant="contained"
-						sx={{
-							width: "100%",
-							height: "60px",
-							mt: 4,
-							color: "white",
-							textTransform: "capitalize",
-							fontSize: "18px",
-						}}>
-						Sign In
-					</Button>
-				</div>
+				<Formik
+					initialValues={{email: "", password: ""}}
+					validationSchema={valdiationSchema}
+					validateOnBlur={false}
+					validateOnMount={false}
+					validateOnChange={false}
+					onSubmit={handleLogin}>
+					<>
+						<div>
+							<FormTextField name="apikey" id="" label="" sx={{width: "100%"}} />
+						</div>
+						<div>
+							<SubmitButton
+								variant="contained"
+								sx={{
+									mt: 4,
+								}}>
+								Sign In
+							</SubmitButton>
+						</div>
+					</>
+				</Formik>
 			</Box>
 		</div>
 	);
