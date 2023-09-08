@@ -16,11 +16,13 @@ export const catsApi = baseApi.injectEndpoints({
 		}),
 		getFavouriteCats: build.query<Cat[], any>({
 			query: () => ({
-				url: "favorites",
+				url: "favourites",
 			}),
 			providesTags: ["favouriteCats"],
 		}),
+		
 	}),
+	overrideExisting:true
 });
 
 export const {useLazyGetCatsQuery, useLazyGetFavouriteCatsQuery} = catsApi;
