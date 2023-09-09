@@ -9,6 +9,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
 import EmptyCatsList from "../../../components/EmptyCatsList";
 import {useAppDispatch} from "../../../redux/store";
+import {FavouriteCat} from "../../../types/cat";
 
 export default function Page(props: any) {
 	const [favorites, isLoading] = useLoadFavourites();
@@ -46,7 +47,7 @@ export default function Page(props: any) {
 						<>
 							{favorites && favorites.length !== 0 ? (
 								<>
-									{favorites.map((i) => (
+									{favorites.map((i: FavouriteCat) => (
 										<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
 											<CatItem triggerOnRemoveAnimation={true} cat={i} />
 										</Grid>

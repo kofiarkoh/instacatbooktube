@@ -6,12 +6,13 @@ import Navbar, {NavbarTitle} from "@/components/Navbar";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Unstable_Grid2";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import {useLogout} from "../../hooks/auth/useLogout";
 import {useLoadFavourites} from "../../hooks/useLoadFavourites";
 import {useScrollObserver} from "../../hooks/useScrollObserver";
 import {useLazyGetCatsQuery} from "../../redux/rtk/catsApi";
+import {Cat} from "../../types/cat";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading, isFetching}] = useLazyGetCatsQuery();
@@ -21,6 +22,7 @@ export default function Page(props: any) {
 	const router = useRouter();
 	const [logout] = useLogout();
 	const [favorites, isLoadingFavorites] = useLoadFavourites();
+	//const observerTarget = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		getCats(page);
@@ -69,7 +71,7 @@ export default function Page(props: any) {
 					<>
 						<>
 							{cats &&
-								cats.map((i) => (
+								cats.map((i: Cat) => (
 									<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
 										<CatItem cat={i} triggerOnRemoveAnimation={false} />
 									</Grid>

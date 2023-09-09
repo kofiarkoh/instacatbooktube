@@ -32,14 +32,14 @@ export default function Page() {
 		dispatch(updateToken(data.apikey));
 		getFavouriteCats({})
 			.unwrap()
-			.then((response) => {
+			.then((response: any) => {
 				localStorage.setItem("api_key", data.apikey);
 				toast("Login successful.", {
 					type: "success",
 				});
 				router.push("/cats");
 			})
-			.catch((error) => {
+			.catch((error: any) => {
 				console.log(error);
 				helpers.setErrors({apikey: "Invalid API key"});
 			});

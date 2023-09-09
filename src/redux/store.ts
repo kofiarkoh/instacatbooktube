@@ -7,6 +7,7 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {baseApi} from "./rtk/baseApi";
 import tokenSlice from "./tokenSlice";
 import catsSlice from "./catsSlice";
+import {DispatchFunc, RootState} from "./types";
 
 export const rootReducer = combineReducers({
 	[baseApi.reducerPath]: baseApi.reducer,
@@ -23,11 +24,6 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
 		preloadedState,
 	});
 }
-
-export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof setupStore>;
-export type AppDispatch = AppStore["dispatch"];
-type DispatchFunc = () => AppDispatch;
 
 export const reduxStore = setupStore();
 export const useAppDispatch: DispatchFunc = useDispatch;

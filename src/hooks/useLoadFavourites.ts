@@ -14,13 +14,13 @@ export const useLoadFavourites = () => {
 		getFavouriteCats({})
 			.unwrap()
 			.then((response: FavouriteCat[]) => {
-				let ids: {[key: number]: string} = {};
+				let ids: {[key: string]: string | number} = {};
 				response.forEach((i) => {
 					ids[i.image.id] = i.id;
 				});
 				dispatch(updateFavoriteCats(ids));
 			})
-			.catch((error) => {
+			.catch((error: any) => {
 				toast("Failed to load favourites. Please reload the page to try again", {
 					type: "error",
 				});

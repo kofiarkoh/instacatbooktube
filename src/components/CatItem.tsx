@@ -12,7 +12,7 @@ import {
 	useRemoveCatFromFavouriteMutation,
 } from "../redux/rtk/catsApi";
 import {useAppDispatch, useAppSelector} from "../redux/store";
-import {Cat, FavouriteCat} from "../types/cat";
+import {Cat, FavouriteCat, MarkCatAsFavouriteResponse} from "../types/cat";
 import {toast} from "react-toastify";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function CatItem(props: Props) {
-	const {triggerOnRemoveAnimation, cat, onMarkAsFavourite} = props;
+	const {triggerOnRemoveAnimation, cat} = props;
 	const [animate, setAnimate] = useState(false);
 	const [removeFromFavourites, {}] = useRemoveCatFromFavouriteMutation();
 	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
@@ -30,7 +30,7 @@ export default function CatItem(props: Props) {
 	const dispatch = useAppDispatch();
 
 	let catId = "user_id" in cat ? cat.image.id : cat.id;
-	let isFavorite = favouriteCatIds[catId];
+	let isFavorite = favouriteCatIds[catId] ? true : false;
 
 	/**
 	 * if already mark as favorite, remove from favorite, else add to faavourite
@@ -39,7 +39,7 @@ export default function CatItem(props: Props) {
 		if (isFavorite) {
 			removeFromFavourites(favouriteCatIds[catId])
 				.unwrap()
-				.then((r) => {
+				.then((r: any) => {
 					dispatch(
 						addToFavoruiteCatIds({
 							catId: catId,
@@ -52,7 +52,7 @@ export default function CatItem(props: Props) {
 						setAnimate(true);
 					}
 				})
-				.catch((e) => {
+				.catch((e: any) => {
 					console.log(e);
 					toast("Failed to remove photo from favourites. Please try again", {
 						type: "error",
@@ -62,7 +62,7 @@ export default function CatItem(props: Props) {
 			markCatAsFavorite({
 				image_id: cat.id,
 			})
-				.then((r) => {
+				.then((r: any) => {
 					dispatch(
 						addToFavoruiteCatIds({
 							catId: catId,
@@ -73,7 +73,7 @@ export default function CatItem(props: Props) {
 						type: "success",
 					});
 				})
-				.catch((e) => {
+				.catch((e: any) => {
 					toast("Failed to add photo to favourites. Please try again", {
 						type: "error",
 					});
