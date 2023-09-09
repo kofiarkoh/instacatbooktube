@@ -1,6 +1,6 @@
 "use client";
 import BackArrow from "@/assets/images/back_arrow.svg";
-import CatItem from "@/components/CatItem";
+import CatItem, {CatItemSkeleton} from "@/components/CatItem";
 import Navbar, {NavbarTitle} from "@/components/Navbar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -29,6 +29,7 @@ export default function Page(props: any) {
 	useEffect(() => {
 		handleGetFavourites();
 	}, []);
+
 	return (
 		<>
 			<Navbar>
@@ -44,20 +45,36 @@ export default function Page(props: any) {
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{favorites && favorites.length !== 0 ? (
+					{isLoading ? (
 						<>
-							{favorites.map((i) => (
-								<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
-									<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
-								</Grid>
-							))}
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
 						</>
 					) : (
-						<EmptyCatsList>
-							<Typography variant="h4" color="initial">
-								You have not saved any favorite cat in your account
-							</Typography>
-						</EmptyCatsList>
+						<>
+							{favorites && favorites.length !== 0 ? (
+								<>
+									{favorites.map((i) => (
+										<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
+											<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
+										</Grid>
+									))}
+								</>
+							) : (
+								<EmptyCatsList>
+									<Typography variant="h4" color="initial">
+										You have not saved any favorite cat in your account
+									</Typography>
+								</EmptyCatsList>
+							)}
+						</>
 					)}
 				</Grid>
 			</div>
