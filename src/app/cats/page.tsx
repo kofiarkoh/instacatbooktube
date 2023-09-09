@@ -6,7 +6,7 @@ import Navbar, {NavbarTitle} from "@/components/Navbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {
 	useLazyGetCatsQuery,
 	useMarkCatAsFavouriteMutation,
@@ -17,14 +17,21 @@ import Box from "@mui/material/Box";
 import EmptyCatsList from "../../components/EmptyCatsList";
 import {useLogout} from "../../hooks/auth/useLogout";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import {useScrollObserver} from "../../hooks/useScrollObserver";
 
 export default function Page(props: any) {
-	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
+	const [getCats, {data: cats, isLoading, isFetching}] = useLazyGetCatsQuery();
 	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
 		useMarkCatAsFavouriteMutation();
 	const [dialogVisible, setDialogVisible] = useState(false);
+	const [page, observerTarget] = useScrollObserver();
 	const router = useRouter();
 	const [logout] = useLogout();
+
+	useEffect(() => {
+		console.log(`fetching page ${page}`);
+		getCats(page);
+	}, [page]);
 
 	const addToFavourite = (cat: Cat) => {
 		markCatAsFavorite({
@@ -55,9 +62,6 @@ export default function Page(props: any) {
 		logout();
 	};
 
-	useEffect(() => {
-		getCats({});
-	}, []);
 	return (
 		<>
 			<Navbar>
@@ -69,7 +73,9 @@ export default function Page(props: any) {
 					aria-label="log out">
 					<LogoutIcon />
 				</IconButton>
-				<NavbarTitle />
+				<NavbarTitle>
+					{page}-{`${isLoading}---${isFetching}`}
+				</NavbarTitle>
 				<IconButton
 					size="large"
 					edge="start"
@@ -81,37 +87,31 @@ export default function Page(props: any) {
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{isLoading ? (
+					<>
 						<>
-							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
-								<CatItemSkeleton />
-							</Grid>
-							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
-								<CatItemSkeleton />
-							</Grid>
-							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
-								<CatItemSkeleton />
-							</Grid>
-						</>
-					) : (
-						<>
-							{cats ? (
-								<>
-									{cats.map((i) => (
-										<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
-											<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
+							{cats &&
+								cats.map((i) => (
+									<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
+										<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
+									</Grid>
+								))}
+							{isLoading ||
+								(isFetching && (
+									<>
+										<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+											<CatItemSkeleton />
 										</Grid>
-									))}
-								</>
-							) : (
-								<EmptyCatsList>
-									<Typography variant="h4" color="initial">
-										No Cats Found
-									</Typography>
-								</EmptyCatsList>
-							)}
+										<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+											<CatItemSkeleton />
+										</Grid>
+										<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+											<CatItemSkeleton />
+										</Grid>
+									</>
+								))}
+							<div ref={observerTarget}></div>
 						</>
-					)}
+					</>
 				</Grid>
 			</div>
 			<ConfirmDialog
