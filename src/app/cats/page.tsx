@@ -15,12 +15,14 @@ import {useRouter} from "next/navigation";
 import {Cat} from "../../types/cat";
 import Box from "@mui/material/Box";
 import EmptyCatsList from "../../components/EmptyCatsList";
+import {useLogout} from "../../hooks/auth/useLogout";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
 	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
 		useMarkCatAsFavouriteMutation();
 	const router = useRouter();
+	const [logout] = useLogout();
 
 	const addToFavourite = (cat: Cat) => {
 		markCatAsFavorite({
@@ -38,13 +40,22 @@ export default function Page(props: any) {
 		router.push("/cats/favorites");
 	};
 
+	const confirmLogout = () => {
+		logout();
+	};
+
 	useEffect(() => {
 		getCats({});
 	}, []);
 	return (
 		<>
 			<Navbar>
-				<IconButton size="large" edge="start" color="inherit" aria-label="log out">
+				<IconButton
+					onClick={confirmLogout}
+					size="large"
+					edge="start"
+					color="inherit"
+					aria-label="log out">
 					<LogoutIcon />
 				</IconButton>
 				<NavbarTitle />
