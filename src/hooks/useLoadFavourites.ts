@@ -1,8 +1,9 @@
-import {useEffect} from "react";
-import {FavouriteCat} from "@/types/cat";
 import {updateFavoriteCats} from "@/redux/catsSlice";
 import {useLazyGetFavouriteCatsQuery} from "@/redux/rtk/catsApi";
 import {useAppDispatch} from "@/redux/store";
+import {FavouriteCat} from "@/types/cat";
+import {useEffect} from "react";
+import {toast} from "react-toastify";
 
 export const useLoadFavourites = () => {
 	const [getFavouriteCats, {data: favorites, isLoading}] =
@@ -20,7 +21,9 @@ export const useLoadFavourites = () => {
 				dispatch(updateFavoriteCats(ids));
 			})
 			.catch((error) => {
-				console.log(error);
+				toast("Failed to load favourites. Please reload the page to try again", {
+					type: "error",
+				});
 			});
 	};
 

@@ -13,6 +13,7 @@ import SubmitButton from "../../../components/form/SubmitButton";
 import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
 import {useAppDispatch} from "../../../redux/store";
 import {updateToken} from "../../../redux/tokenSlice";
+import {toast} from "react-toastify";
 
 const valdiationSchema = Yup.object().shape({
 	apikey: Yup.string().required(),
@@ -33,6 +34,9 @@ export default function Page() {
 			.unwrap()
 			.then((response) => {
 				localStorage.setItem("api_key", data.apikey);
+				toast("Login successful.", {
+					type: "success",
+				});
 				router.push("/cats");
 			})
 			.catch((error) => {
