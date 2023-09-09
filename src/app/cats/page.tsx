@@ -73,9 +73,7 @@ export default function Page(props: any) {
 					aria-label="log out">
 					<LogoutIcon />
 				</IconButton>
-				<NavbarTitle>
-					{page}-{`${isLoading}---${isFetching}`}
-				</NavbarTitle>
+				<NavbarTitle />
 				<IconButton
 					size="large"
 					edge="start"
