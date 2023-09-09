@@ -10,6 +10,7 @@ import {useEffect} from "react";
 import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
 import {Cat} from "../../../types/cat";
 import EmptyCatsList from "../../../components/EmptyCatsList";
+import Link from "next/link";
 
 export default function Page(props: any) {
 	const [getFavouriteCats, {isLoading, data: favorites}] =
@@ -33,9 +34,11 @@ export default function Page(props: any) {
 	return (
 		<>
 			<Navbar>
-				<IconButton size="large" edge="start" color="inherit" aria-label="log out">
-					<BackArrow />
-				</IconButton>
+				<Link href="/cats">
+					<IconButton size="large" edge="start" color="inherit" aria-label="log out">
+						<BackArrow />
+					</IconButton>
+				</Link>
 				<NavbarTitle>Favorites</NavbarTitle>
 				<IconButton
 					size="large"
