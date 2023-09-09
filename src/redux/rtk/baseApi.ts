@@ -5,7 +5,7 @@ export const baseApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
 		prepareHeaders: (headers, {getState}) => {
-			headers.set("x-api-key", `${process.env.NEXT_PUBLIC_API_KEY}`);
+			headers.set("x-api-key", `${getState().tokenState.token}`);
 		},
 	}),
 
