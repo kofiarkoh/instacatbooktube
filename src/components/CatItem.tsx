@@ -13,6 +13,7 @@ import {
 } from "../redux/rtk/catsApi";
 import {useAppDispatch, useAppSelector} from "../redux/store";
 import {Cat, FavouriteCat} from "../types/cat";
+import {toast} from "react-toastify";
 
 interface Props {
 	triggerOnRemoveAnimation?: boolean;
@@ -44,12 +45,18 @@ export default function CatItem(props: Props) {
 							catId: catId,
 						})
 					);
+					toast("Photo removed from favourites.", {
+						type: "success",
+					});
 					if (triggerOnRemoveAnimation) {
 						setAnimate(true);
 					}
 				})
 				.catch((e) => {
 					console.log(e);
+					toast("Failed to remove photo from favourites. Please try again", {
+						type: "error",
+					});
 				});
 		} else {
 			markCatAsFavorite({
@@ -62,10 +69,14 @@ export default function CatItem(props: Props) {
 							favouriteId: r.data.id,
 						})
 					);
-					console.log("cat set as fav", r.data.id);
+					toast("Photo added as favourite.", {
+						type: "success",
+					});
 				})
 				.catch((e) => {
-					console.log("failed to set cat as favorite");
+					toast("Failed to add photo to favourites. Please try again", {
+						type: "error",
+					});
 				});
 		}
 	};
