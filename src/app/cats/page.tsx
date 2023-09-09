@@ -13,6 +13,8 @@ import {
 } from "../../redux/rtk/catsApi";
 import {useRouter} from "next/navigation";
 import {Cat} from "../../types/cat";
+import Box from "@mui/material/Box";
+import EmptyCatsList from "../../components/EmptyCatsList";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
@@ -59,13 +61,13 @@ export default function Page(props: any) {
 				<Grid container spacing={2}>
 					{isLoading ? (
 						<>
-							<Grid item xs={12} sm={12} md={4} lg={4}>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
 								<CatItemSkeleton />
 							</Grid>
-							<Grid item xs={12} sm={12} md={4} lg={4}>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
 								<CatItemSkeleton />
 							</Grid>
-							<Grid item xs={12} sm={12} md={4} lg={4}>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
 								<CatItemSkeleton />
 							</Grid>
 						</>
@@ -74,15 +76,17 @@ export default function Page(props: any) {
 							{cats ? (
 								<>
 									{cats.map((i) => (
-										<Grid key={i.id} item xs={12} sm={12} md={4} lg={4}>
+										<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
 											<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
 										</Grid>
 									))}
 								</>
 							) : (
-								<Typography variant="body1" color="initial">
-									no cats found
-								</Typography>
+								<EmptyCatsList>
+									<Typography variant="h4" color="initial">
+										No Cats Found
+									</Typography>
+								</EmptyCatsList>
 							)}
 						</>
 					)}
