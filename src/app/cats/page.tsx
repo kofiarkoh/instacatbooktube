@@ -9,37 +9,22 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import {useLogout} from "../../hooks/auth/useLogout";
+import {useLoadFavourites} from "../../hooks/useLoadFavourites";
 import {useScrollObserver} from "../../hooks/useScrollObserver";
-import {
-	useLazyGetCatsQuery,
-	useMarkCatAsFavouriteMutation,
-} from "../../redux/rtk/catsApi";
-import {Cat} from "../../types/cat";
+import {useLazyGetCatsQuery} from "../../redux/rtk/catsApi";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading, isFetching}] = useLazyGetCatsQuery();
-	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
-		useMarkCatAsFavouriteMutation();
+
 	const [dialogVisible, setDialogVisible] = useState(false);
 	const [page, observerTarget] = useScrollObserver();
 	const router = useRouter();
 	const [logout] = useLogout();
+	const [favorites, isLoadingFavorites] = useLoadFavourites();
 
 	useEffect(() => {
 		getCats(page);
-	}, [page]);
-
-	const addToFavourite = (cat: Cat) => {
-		markCatAsFavorite({
-			image_id: cat.id,
-		})
-			.then((r) => {
-				console.log("cat set as fav");
-			})
-			.catch((e) => {
-				console.log("failed to set cat as favorite");
-			});
-	};
+	}, [page, favorites]);
 
 	const goToFavorites = () => {
 		router.push("/cats/favorites");

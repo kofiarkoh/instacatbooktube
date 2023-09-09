@@ -5,7 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {Box} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {addToFavoruiteCatIds} from "../redux/catsSlice";
 import {
 	useMarkCatAsFavouriteMutation,
@@ -70,17 +70,6 @@ export default function CatItem(props: Props) {
 		}
 	};
 
-	useEffect(() => {
-		if ("user_id" in cat) {
-			// item is already saved as favorite
-			dispatch(
-				addToFavoruiteCatIds({
-					catId: catId,
-					favouriteId: cat.id,
-				})
-			);
-		}
-	}, [cat]);
 	return (
 		<div className={animate ? "animate__animated animate__fadeOutLeft" : ""}>
 			<Box

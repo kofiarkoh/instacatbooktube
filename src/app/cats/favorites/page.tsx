@@ -2,31 +2,16 @@
 import BackArrow from "@/assets/images/back_arrow.svg";
 import CatItem, {CatItemSkeleton} from "@/components/CatItem";
 import Navbar, {NavbarTitle} from "@/components/Navbar";
+import {useLoadFavourites} from "@/hooks/useLoadFavourites";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
-import {useEffect} from "react";
 import EmptyCatsList from "../../../components/EmptyCatsList";
-import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
-import {Cat} from "../../../types/cat";
+import {useAppDispatch} from "../../../redux/store";
 
 export default function Page(props: any) {
-	const [getFavouriteCats, {isLoading, data: favorites}] =
-		useLazyGetFavouriteCatsQuery();
-
-	const handleGetFavourites = () => {
-		getFavouriteCats({})
-			.unwrap()
-			.then((response: Cat[]) => {})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-
-	useEffect(() => {
-		handleGetFavourites();
-	}, []);
+	const [favorites, isLoading] = useLoadFavourites();
 
 	return (
 		<>

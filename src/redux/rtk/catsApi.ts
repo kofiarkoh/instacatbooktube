@@ -1,4 +1,4 @@
-import {Cat} from "../../types/cat";
+import {Cat, FavouriteCat} from "../../types/cat";
 import {baseApi} from "./baseApi";
 
 export const catsApi = baseApi.injectEndpoints({
@@ -25,7 +25,7 @@ export const catsApi = baseApi.injectEndpoints({
 			},
 			providesTags: ["cats"],
 		}),
-		getFavouriteCats: build.query<Cat[], any>({
+		getFavouriteCats: build.query<FavouriteCat[], any>({
 			query: () => ({
 				url: "favourites",
 			}),
