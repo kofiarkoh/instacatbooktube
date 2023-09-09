@@ -44,7 +44,7 @@ export const catsApi = baseApi.injectEndpoints({
 				url: `favourites/${id}`,
 				method: "DELETE",
 			}),
-			invalidatesTags: ["favouriteCats"],
+			invalidatesTags: ["favouriteCats", "cats"],
 		}),
 	}),
 	overrideExisting: true,
