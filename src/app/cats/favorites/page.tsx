@@ -2,34 +2,16 @@
 import BackArrow from "@/assets/images/back_arrow.svg";
 import CatItem, {CatItemSkeleton} from "@/components/CatItem";
 import Navbar, {NavbarTitle} from "@/components/Navbar";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import {useLoadFavourites} from "@/hooks/useLoadFavourites";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import {useEffect} from "react";
-import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
-import {Cat} from "../../../types/cat";
-import EmptyCatsList from "../../../components/EmptyCatsList";
 import Link from "next/link";
+import EmptyCatsList from "../../../components/EmptyCatsList";
+import {useAppDispatch} from "../../../redux/store";
 
 export default function Page(props: any) {
-	const [getFavouriteCats, {isLoading, data: favorites}] =
-		useLazyGetFavouriteCatsQuery();
-
-	const handleGetFavourites = () => {
-		getFavouriteCats({})
-			.unwrap()
-			.then((response: Cat[]) => {})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-
-	const removeFromFavorites = (item: Cat) => {};
-
-	useEffect(() => {
-		handleGetFavourites();
-	}, []);
+	const [favorites, isLoading] = useLoadFavourites();
 
 	return (
 		<>
@@ -66,7 +48,7 @@ export default function Page(props: any) {
 								<>
 									{favorites.map((i) => (
 										<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
-											<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
+											<CatItem triggerOnRemoveAnimation={true} cat={i} />
 										</Grid>
 									))}
 								</>

@@ -4,46 +4,27 @@ import LogoutIcon from "@/assets/images/logout.svg";
 import CatItem, {CatItemSkeleton} from "@/components/CatItem";
 import Navbar, {NavbarTitle} from "@/components/Navbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {
-	useLazyGetCatsQuery,
-	useMarkCatAsFavouriteMutation,
-} from "../../redux/rtk/catsApi";
 import {useRouter} from "next/navigation";
-import {Cat} from "../../types/cat";
-import Box from "@mui/material/Box";
-import EmptyCatsList from "../../components/EmptyCatsList";
-import {useLogout} from "../../hooks/auth/useLogout";
+import {useEffect, useState} from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import {useLogout} from "../../hooks/auth/useLogout";
+import {useLoadFavourites} from "../../hooks/useLoadFavourites";
 import {useScrollObserver} from "../../hooks/useScrollObserver";
+import {useLazyGetCatsQuery} from "../../redux/rtk/catsApi";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading, isFetching}] = useLazyGetCatsQuery();
-	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
-		useMarkCatAsFavouriteMutation();
+
 	const [dialogVisible, setDialogVisible] = useState(false);
 	const [page, observerTarget] = useScrollObserver();
 	const router = useRouter();
 	const [logout] = useLogout();
+	const [favorites, isLoadingFavorites] = useLoadFavourites();
 
 	useEffect(() => {
-		console.log(`fetching page ${page}`);
 		getCats(page);
-	}, [page]);
-
-	const addToFavourite = (cat: Cat) => {
-		markCatAsFavorite({
-			image_id: cat.id,
-		})
-			.then((r) => {
-				console.log("cat set as fav");
-			})
-			.catch((e) => {
-				console.log("failed to set cat as favorite");
-			});
-	};
+	}, [page, favorites]);
 
 	const goToFavorites = () => {
 		router.push("/cats/favorites");
@@ -90,7 +71,7 @@ export default function Page(props: any) {
 							{cats &&
 								cats.map((i) => (
 									<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
-										<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
+										<CatItem cat={i} triggerOnRemoveAnimation={false} />
 									</Grid>
 								))}
 							{isLoading ||

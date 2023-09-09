@@ -6,40 +6,67 @@ import {Box} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import {useState} from "react";
+import {addToFavoruiteCatIds} from "../redux/catsSlice";
+import {
+	useMarkCatAsFavouriteMutation,
+	useRemoveCatFromFavouriteMutation,
+} from "../redux/rtk/catsApi";
+import {useAppDispatch, useAppSelector} from "../redux/store";
 import {Cat, FavouriteCat} from "../types/cat";
-import {useRemoveCatFromFavouriteMutation} from "../redux/rtk/catsApi";
 
 interface Props {
-	isFavorite?: boolean;
+	triggerOnRemoveAnimation?: boolean;
 	cat: Cat | FavouriteCat;
-	onRemove?: (i: Cat) => void;
-	onMarkAsFavourite?: (i: Cat) => void;
 }
 
 export default function CatItem(props: Props) {
-	const {isFavorite, onRemove, cat, onMarkAsFavourite} = props;
+	const {triggerOnRemoveAnimation, cat, onMarkAsFavourite} = props;
 	const [animate, setAnimate] = useState(false);
 	const [removeFromFavourites, {}] = useRemoveCatFromFavouriteMutation();
+	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
+		useMarkCatAsFavouriteMutation();
+	const {favouriteCatIds} = useAppSelector((state) => state.catsState);
+	const dispatch = useAppDispatch();
+
+	let catId = "user_id" in cat ? cat.image.id : cat.id;
+	let isFavorite = favouriteCatIds[catId];
 
 	/**
 	 * if already mark as favorite, remove from favorite, else add to faavourite
 	 */
 	const onFavourite = () => {
 		if (isFavorite) {
-			removeFromFavourites(cat.id)
+			removeFromFavourites(favouriteCatIds[catId])
 				.unwrap()
 				.then((r) => {
-					setAnimate(true);
+					dispatch(
+						addToFavoruiteCatIds({
+							catId: catId,
+						})
+					);
+					if (triggerOnRemoveAnimation) {
+						setAnimate(true);
+					}
 				})
 				.catch((e) => {
 					console.log(e);
 				});
 		} else {
-			// check if cat is of Cat type not FavouriteCat
-			if ("url" in cat && onMarkAsFavourite) {
-				onMarkAsFavourite(cat);
-			}
-			//onMarkAsFavourite && onMarkAsFavourite(cat as Cat);
+			markCatAsFavorite({
+				image_id: cat.id,
+			})
+				.then((r) => {
+					dispatch(
+						addToFavoruiteCatIds({
+							catId: catId,
+							favouriteId: r.data.id,
+						})
+					);
+					console.log("cat set as fav", r.data.id);
+				})
+				.catch((e) => {
+					console.log("failed to set cat as favorite");
+				});
 		}
 	};
 
