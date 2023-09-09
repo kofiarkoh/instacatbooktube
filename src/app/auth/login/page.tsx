@@ -1,14 +1,46 @@
 "use client";
-import React, {PropsWithChildren} from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import InstaIcon from "@/assets/images/insta.svg";
-import CatIcon from "@/assets/images/cat.svg";
 import BookIcon from "@/assets/images/book.svg";
+import CatIcon from "@/assets/images/cat.svg";
+import InstaIcon from "@/assets/images/insta.svg";
 import YoutubeIcon from "@/assets/images/tube.svg";
+import Box from "@mui/material/Box";
+import {Formik, FormikHelpers} from "formik";
+import {useRouter} from "next/navigation";
+import {PropsWithChildren} from "react";
+import * as Yup from "yup";
+import FormTextField from "../../../components/form/FormTextField";
+import SubmitButton from "../../../components/form/SubmitButton";
+import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
+import {useAppDispatch} from "../../../redux/store";
+import {updateToken} from "../../../redux/tokenSlice";
+
+const valdiationSchema = Yup.object().shape({
+	apikey: Yup.string().required(),
+});
+const initialData = {apikey: ""};
 
 export default function Page() {
+	const [getFavouriteCats, {isLoading}] = useLazyGetFavouriteCatsQuery();
+	const dispatch = useAppDispatch();
+	const router = useRouter();
+
+	const handleLogin = (
+		data: typeof initialData,
+		helpers: FormikHelpers<typeof initialData>
+	) => {
+		dispatch(updateToken(data.apikey));
+		getFavouriteCats({})
+			.unwrap()
+			.then((response) => {
+				localStorage.setItem("api_key", data.apikey);
+				router.push("/cats");
+			})
+			.catch((error) => {
+				console.log(error);
+				helpers.setErrors({apikey: "Invalid API key"});
+			});
+	};
+
 	return (
 		<div
 			style={{
@@ -45,23 +77,34 @@ export default function Page() {
 						</div>
 					</IconRow>
 				</div>
-				<div>
-					<TextField id="" label="" sx={{width: "100%"}} />
-				</div>
-				<div>
-					<Button
-						variant="contained"
-						sx={{
-							width: "100%",
-							height: "60px",
-							mt: 4,
-							color: "white",
-							textTransform: "capitalize",
-							fontSize: "18px",
-						}}>
-						Sign In
-					</Button>
-				</div>
+				<Formik
+					initialValues={initialData}
+					validationSchema={valdiationSchema}
+					validateOnBlur={false}
+					validateOnMount={false}
+					validateOnChange={false}
+					onSubmit={handleLogin}>
+					<>
+						<div>
+							<FormTextField
+								name="apikey"
+								id=""
+								label=""
+								sx={{width: "100%", mt: 4}}
+							/>
+						</div>
+						<div>
+							<SubmitButton
+								variant="contained"
+								loading={isLoading}
+								sx={{
+									mt: 4,
+								}}>
+								Sign In
+							</SubmitButton>
+						</div>
+					</>
+				</Formik>
 			</Box>
 		</div>
 	);

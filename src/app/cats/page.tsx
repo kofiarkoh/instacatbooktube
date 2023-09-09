@@ -1,12 +1,46 @@
 "use client";
+import FavoriteIcon from "@/assets/images/heart.svg";
+import LogoutIcon from "@/assets/images/logout.svg";
+import CatItem, {CatItemSkeleton} from "@/components/CatItem";
 import Navbar, {NavbarTitle} from "@/components/Navbar";
 import IconButton from "@mui/material/IconButton";
-import LogoutIcon from "@/assets/images/logout.svg";
-import FavoriteIcon from "@/assets/images/heart.svg";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import CatItem from "@/components/CatItem";
+import {useEffect} from "react";
+import {
+	useLazyGetCatsQuery,
+	useMarkCatAsFavouriteMutation,
+} from "../../redux/rtk/catsApi";
+import {useRouter} from "next/navigation";
+import {Cat} from "../../types/cat";
+import Box from "@mui/material/Box";
+import EmptyCatsList from "../../components/EmptyCatsList";
 
 export default function Page(props: any) {
+	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
+	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
+		useMarkCatAsFavouriteMutation();
+	const router = useRouter();
+
+	const addToFavourite = (cat: Cat) => {
+		markCatAsFavorite({
+			image_id: cat.id,
+		})
+			.then((r) => {
+				console.log("cat set as fav");
+			})
+			.catch((e) => {
+				console.log("failed to set cat as favorite");
+			});
+	};
+
+	const goToFavorites = () => {
+		router.push("/cats/favorites");
+	};
+
+	useEffect(() => {
+		getCats({});
+	}, []);
 	return (
 		<>
 			<Navbar>
@@ -14,17 +48,48 @@ export default function Page(props: any) {
 					<LogoutIcon />
 				</IconButton>
 				<NavbarTitle />
-				<IconButton size="large" edge="start" color="inherit" aria-label="log out">
+				<IconButton
+					size="large"
+					edge="start"
+					color="inherit"
+					aria-label="favorites"
+					onClick={goToFavorites}>
 					<FavoriteIcon />
 				</IconButton>
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{[1, 2, 3, 4, 5].map((i) => (
-						<Grid key={i} item={true} xs={12} sm={12} md={4} lg={4}>
-							<CatItem />
-						</Grid>
-					))}
+					{isLoading ? (
+						<>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+						</>
+					) : (
+						<>
+							{cats ? (
+								<>
+									{cats.map((i) => (
+										<Grid component="div" key={i.id} xs={12} sm={12} md={4} lg={4}>
+											<CatItem cat={i} onMarkAsFavourite={addToFavourite} />
+										</Grid>
+									))}
+								</>
+							) : (
+								<EmptyCatsList>
+									<Typography variant="h4" color="initial">
+										No Cats Found
+									</Typography>
+								</EmptyCatsList>
+							)}
+						</>
+					)}
 				</Grid>
 			</div>
 		</>

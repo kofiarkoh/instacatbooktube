@@ -1,18 +1,35 @@
 "use client";
-import Navbar, {NavbarTitle} from "@/components/Navbar";
-import IconButton from "@mui/material/IconButton";
 import BackArrow from "@/assets/images/back_arrow.svg";
-import FavoriteIcon from "@/assets/images/heart.svg";
+import CatItem, {CatItemSkeleton} from "@/components/CatItem";
+import Navbar, {NavbarTitle} from "@/components/Navbar";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Unstable_Grid2";
-import CatItem from "@/components/CatItem";
-import {useState} from "react";
+import {useEffect} from "react";
+import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
+import {Cat} from "../../../types/cat";
+import EmptyCatsList from "../../../components/EmptyCatsList";
 
 export default function Page(props: any) {
-	const [favorites, setFavorites] = useState([1, 2, 3, 4, 5]);
+	const [getFavouriteCats, {isLoading, data: favorites}] =
+		useLazyGetFavouriteCatsQuery();
 
-	const removeFromFavorites = (item: number) => {
-		setFavorites(favorites.filter((i) => i !== item));
+	const handleGetFavourites = () => {
+		getFavouriteCats({})
+			.unwrap()
+			.then((response: Cat[]) => {})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
+
+	const removeFromFavorites = (item: Cat) => {};
+
+	useEffect(() => {
+		handleGetFavourites();
+	}, []);
+
 	return (
 		<>
 			<Navbar>
@@ -28,11 +45,37 @@ export default function Page(props: any) {
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{favorites.map((i) => (
-						<Grid key={i} item={true} xs={12} sm={12} md={4} lg={4}>
-							<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
-						</Grid>
-					))}
+					{isLoading ? (
+						<>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+							<Grid component="div" xs={12} sm={12} md={4} lg={4}>
+								<CatItemSkeleton />
+							</Grid>
+						</>
+					) : (
+						<>
+							{favorites && favorites.length !== 0 ? (
+								<>
+									{favorites.map((i) => (
+										<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
+											<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
+										</Grid>
+									))}
+								</>
+							) : (
+								<EmptyCatsList>
+									<Typography variant="h4" color="initial">
+										You have not saved any favorite cat in your account
+									</Typography>
+								</EmptyCatsList>
+							)}
+						</>
+					)}
 				</Grid>
 			</div>
 		</>

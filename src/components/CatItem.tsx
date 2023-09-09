@@ -1,28 +1,48 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, {useState} from "react";
-import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import {Box} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Box} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Skeleton from "@mui/material/Skeleton";
+import {useState} from "react";
+import {Cat, FavouriteCat} from "../types/cat";
+import {useRemoveCatFromFavouriteMutation} from "../redux/rtk/catsApi";
 
 interface Props {
 	isFavorite?: boolean;
-	cat: any;
-	onRemove: (i: any) => void;
+	cat: Cat | FavouriteCat;
+	onRemove?: (i: Cat) => void;
+	onMarkAsFavourite?: (i: Cat) => void;
 }
-export default function CatItem(props: Props) {
-	const {isFavorite, onRemove, cat} = props;
-	const [animate, setAnimate] = useState(false);
 
-	const handleRemoval = () => {
-		setTimeout(() => {
-			setAnimate(true);
-		}, 3000);
-		setTimeout(() => {
-			onRemove(cat);
-		}, 4000);
+export default function CatItem(props: Props) {
+	const {isFavorite, onRemove, cat, onMarkAsFavourite} = props;
+	const [animate, setAnimate] = useState(false);
+	const [removeFromFavourites, {}] = useRemoveCatFromFavouriteMutation();
+
+	/**
+	 * if already mark as favorite, remove from favorite, else add to faavourite
+	 */
+	const onFavourite = () => {
+		if (isFavorite) {
+			removeFromFavourites(cat.id)
+				.unwrap()
+				.then((r) => {
+					setAnimate(true);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		} else {
+			// check if cat is of Cat type not FavouriteCat
+			if ("url" in cat && onMarkAsFavourite) {
+				onMarkAsFavourite(cat);
+			}
+			//onMarkAsFavourite && onMarkAsFavourite(cat as Cat);
+		}
 	};
+
 	return (
 		<div className={animate ? "animate__animated animate__fadeOutLeft" : ""}>
 			<Box
@@ -32,11 +52,11 @@ export default function CatItem(props: Props) {
 					borderWidth: "5px",
 					borderColor: "red",
 					width: "100%",
-
+					height: "350px",
 					position: "relative",
 				}}>
 				<img
-					src="https://29.media.tumblr.com/tumblr_krvvj0ZbSA1qa9hjso1_1280.jpg"
+					src={"user_id" in cat ? cat.image.url : cat.url}
 					style={{
 						objectFit: "cover",
 						width: "100%",
@@ -62,7 +82,7 @@ export default function CatItem(props: Props) {
 						size="large"
 						edge="start"
 						color="inherit"
-						onClick={handleRemoval}
+						onClick={onFavourite}
 						sx={{padding: 4}}
 						aria-label="favorite">
 						{isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -70,5 +90,12 @@ export default function CatItem(props: Props) {
 				</Box>
 			</Box>
 		</div>
+	);
+}
+export function CatItemSkeleton() {
+	return (
+		<>
+			<Skeleton animation="wave" width="100%" height="350px" />
+		</>
 	);
 }
