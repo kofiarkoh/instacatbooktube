@@ -6,32 +6,43 @@ import {Box} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import {useState} from "react";
-import {Cat} from "../types/cat";
+import {Cat, FavouriteCat} from "../types/cat";
+import {useRemoveCatFromFavouriteMutation} from "../redux/rtk/catsApi";
 
 interface Props {
 	isFavorite?: boolean;
-	cat: Cat;
+	cat: Cat | FavouriteCat;
 	onRemove?: (i: Cat) => void;
 	onMarkAsFavourite?: (i: Cat) => void;
 }
+
 export default function CatItem(props: Props) {
 	const {isFavorite, onRemove, cat, onMarkAsFavourite} = props;
 	const [animate, setAnimate] = useState(false);
+	const [removeFromFavourites, {}] = useRemoveCatFromFavouriteMutation();
 
-	const handleRemoval = () => {
+	/**
+	 * if already mark as favorite, remove from favorite, else add to faavourite
+	 */
+	const onFavourite = () => {
 		if (isFavorite) {
-			if (onRemove) {
-				setTimeout(() => {
+			removeFromFavourites(cat.id)
+				.unwrap()
+				.then((r) => {
 					setAnimate(true);
-				}, 3000);
-				setTimeout(() => {
-					onRemove(cat);
-				}, 4000);
-			}
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		} else {
-			onMarkAsFavourite && onMarkAsFavourite(cat);
+			// check if cat is of Cat type not FavouriteCat
+			if ("url" in cat && onMarkAsFavourite) {
+				onMarkAsFavourite(cat);
+			}
+			//onMarkAsFavourite && onMarkAsFavourite(cat as Cat);
 		}
 	};
+
 	return (
 		<div className={animate ? "animate__animated animate__fadeOutLeft" : ""}>
 			<Box
@@ -45,7 +56,7 @@ export default function CatItem(props: Props) {
 					position: "relative",
 				}}>
 				<img
-					src={cat.url}
+					src={"user_id" in cat ? cat.image.url : cat.url}
 					style={{
 						objectFit: "cover",
 						width: "100%",
@@ -71,7 +82,7 @@ export default function CatItem(props: Props) {
 						size="large"
 						edge="start"
 						color="inherit"
-						onClick={handleRemoval}
+						onClick={onFavourite}
 						sx={{padding: 4}}
 						aria-label="favorite">
 						{isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}

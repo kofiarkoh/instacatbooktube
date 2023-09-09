@@ -47,12 +47,8 @@ export default function Page(props: any) {
 					{favorites ? (
 						<>
 							{favorites.map((i) => (
-								<Grid key={i.image} item={true} xs={12} sm={12} md={4} lg={4}>
-									<CatItem
-										isFavorite={true}
-										cat={i.image}
-										onRemove={removeFromFavorites}
-									/>
+								<Grid key={i.id} item={true} xs={12} sm={12} md={4} lg={4}>
+									<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
 								</Grid>
 							))}
 						</>

@@ -28,6 +28,13 @@ export const catsApi = baseApi.injectEndpoints({
 			}),
 			invalidatesTags: ["favouriteCats"],
 		}),
+		removeCatFromFavourite: build.mutation({
+			query: (id) => ({
+				url: `favourites/${id}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: ["favouriteCats"],
+		}),
 	}),
 	overrideExisting: true,
 });
@@ -36,4 +43,5 @@ export const {
 	useLazyGetCatsQuery,
 	useLazyGetFavouriteCatsQuery,
 	useMarkCatAsFavouriteMutation,
+	useRemoveCatFromFavouriteMutation,
 } = catsApi;
