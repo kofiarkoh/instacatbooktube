@@ -9,6 +9,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import {useEffect} from "react";
 import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
 import {Cat} from "../../../types/cat";
+import EmptyCatsList from "../../../components/EmptyCatsList";
 
 export default function Page(props: any) {
 	const [getFavouriteCats, {isLoading, data: favorites}] =
@@ -52,25 +53,11 @@ export default function Page(props: any) {
 							))}
 						</>
 					) : (
-						<Grid
-							xs={12}
-							sm={12}
-							md={12}
-							lg={12}
-							xl={12}
-							sx={{
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-								height: "400px",
-							}}
-							component="div">
-							<Box sx={{textAlign: "center"}}>
-								<Typography variant="h4" color="initial">
-									You have not saved any favorite cat in your account
-								</Typography>
-							</Box>
-						</Grid>
+						<EmptyCatsList>
+							<Typography variant="h4" color="initial">
+								You have not saved any favorite cat in your account
+							</Typography>
+						</EmptyCatsList>
 					)}
 				</Grid>
 			</div>
