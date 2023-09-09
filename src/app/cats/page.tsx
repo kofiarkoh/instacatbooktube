@@ -6,7 +6,7 @@ import Navbar, {NavbarTitle} from "@/components/Navbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {
 	useLazyGetCatsQuery,
 	useMarkCatAsFavouriteMutation,
@@ -16,11 +16,13 @@ import {Cat} from "../../types/cat";
 import Box from "@mui/material/Box";
 import EmptyCatsList from "../../components/EmptyCatsList";
 import {useLogout} from "../../hooks/auth/useLogout";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading}] = useLazyGetCatsQuery();
 	const [markCatAsFavorite, {isLoading: isSettingFavourite}] =
 		useMarkCatAsFavouriteMutation();
+	const [dialogVisible, setDialogVisible] = useState(false);
 	const router = useRouter();
 	const [logout] = useLogout();
 
@@ -40,7 +42,16 @@ export default function Page(props: any) {
 		router.push("/cats/favorites");
 	};
 
-	const confirmLogout = () => {
+	const showDialog = () => {
+		setDialogVisible(true);
+	};
+
+	const hideDialog = () => {
+		setDialogVisible(false);
+	};
+
+	const handleLogout = () => {
+		hideDialog();
 		logout();
 	};
 
@@ -51,7 +62,7 @@ export default function Page(props: any) {
 		<>
 			<Navbar>
 				<IconButton
-					onClick={confirmLogout}
+					onClick={showDialog}
 					size="large"
 					edge="start"
 					color="inherit"
@@ -103,6 +114,12 @@ export default function Page(props: any) {
 					)}
 				</Grid>
 			</div>
+			<ConfirmDialog
+				onAccept={handleLogout}
+				onCancel={hideDialog}
+				title="Are you sure you want to logout"
+				visible={dialogVisible}
+			/>
 		</>
 	);
 }
