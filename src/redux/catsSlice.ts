@@ -1,9 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
 
+const initialState: {
+	[key: string]: string | null;
+} = {};
 export const catsSlice = createSlice({
 	name: "catsSlice",
 	initialState: {
-		favouriteCatIds: {},
+		favouriteCatIds: initialState,
 	},
 	reducers: {
 		addToFavoruiteCatIds: (state, {payload}: {payload: any}) => {

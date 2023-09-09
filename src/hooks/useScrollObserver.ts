@@ -1,8 +1,14 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {
+	MutableRefObject,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 
 export const useScrollObserver = () => {
 	const [page, setPage] = useState(0);
-	const observerTarget = useRef(null);
+	const observerTarget = useRef<any>(null);
 
 	const handleObserver = useCallback((entries: any[]) => {
 		const [target] = entries;
@@ -32,5 +38,5 @@ export const useScrollObserver = () => {
 		};
 	}, [observerTarget]);
 
-	return [page, observerTarget];
+	return [page, observerTarget] as const;
 };

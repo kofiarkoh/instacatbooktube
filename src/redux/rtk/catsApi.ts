@@ -1,4 +1,4 @@
-import {Cat, FavouriteCat} from "../../types/cat";
+import {Cat, FavouriteCat, MarkCatAsFavouriteResponse} from "../../types/cat";
 import {baseApi} from "./baseApi";
 
 export const catsApi = baseApi.injectEndpoints({
@@ -31,7 +31,7 @@ export const catsApi = baseApi.injectEndpoints({
 			}),
 			providesTags: ["favouriteCats"],
 		}),
-		markCatAsFavourite: build.mutation({
+		markCatAsFavourite: build.mutation<MarkCatAsFavouriteResponse, any>({
 			query: (payload) => ({
 				url: "favourites",
 				method: "POST",

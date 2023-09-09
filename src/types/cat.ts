@@ -11,3 +11,9 @@ export interface FavouriteCat {
 	created_at: string;
 	image: Cat;
 }
+
+export interface MarkCatAsFavouriteResponse {
+	data: {
+		id: number | string;
+	};
+}
