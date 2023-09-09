@@ -7,9 +7,12 @@ export default function Navbar(props: PropsWithChildren) {
 	return (
 		<AppBar
 			position="fixed"
-			className="navabar-glass"
 			sx={{
 				position: "fixed",
+				background: "rgba(255, 255, 255, 0.2)",
+				boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+				backdropFilter: "blur(5px)",
+				WebkitBackdropFilter: "blur(5px)",
 			}}>
 			<Toolbar sx={{}}>{props.children}</Toolbar>
 		</AppBar>
