@@ -1,15 +1,14 @@
 "use client";
-import Navbar, {NavbarTitle} from "@/components/Navbar";
-import IconButton from "@mui/material/IconButton";
 import BackArrow from "@/assets/images/back_arrow.svg";
-import FavoriteIcon from "@/assets/images/heart.svg";
-import Grid from "@mui/material/Unstable_Grid2";
 import CatItem from "@/components/CatItem";
-import {useEffect, useState} from "react";
-import {FormikHelpers} from "formik";
-import {updateToken} from "@/redux/tokenSlice";
-import {Cat} from "../../../types/cat";
+import Navbar, {NavbarTitle} from "@/components/Navbar";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Unstable_Grid2";
+import {useEffect} from "react";
 import {useLazyGetFavouriteCatsQuery} from "../../../redux/rtk/catsApi";
+import {Cat} from "../../../types/cat";
 
 export default function Page(props: any) {
 	const [getFavouriteCats, {isLoading, data: favorites}] =
@@ -44,16 +43,34 @@ export default function Page(props: any) {
 			</Navbar>
 			<div style={{paddingTop: "60px"}}>
 				<Grid container spacing={2}>
-					{favorites ? (
+					{favorites && favorites.length !== 0 ? (
 						<>
 							{favorites.map((i) => (
-								<Grid key={i.id} item={true} xs={12} sm={12} md={4} lg={4}>
+								<Grid key={i.id} component="div" xs={12} sm={12} md={4} lg={4}>
 									<CatItem isFavorite={true} cat={i} onRemove={removeFromFavorites} />
 								</Grid>
 							))}
 						</>
 					) : (
-						<>nno</>
+						<Grid
+							xs={12}
+							sm={12}
+							md={12}
+							lg={12}
+							xl={12}
+							sx={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								height: "400px",
+							}}
+							component="div">
+							<Box sx={{textAlign: "center"}}>
+								<Typography variant="h4" color="initial">
+									You have not saved any favorite cat in your account
+								</Typography>
+							</Box>
+						</Grid>
 					)}
 				</Grid>
 			</div>
