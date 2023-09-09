@@ -2,7 +2,7 @@ import LoadingButton, {LoadingButtonProps} from "@mui/lab/LoadingButton";
 import {useFormikContext} from "formik";
 
 export default function SubmitButton(props: LoadingButtonProps) {
-	const {submitForm} = useFormikContext();
+	const {submitForm, isValid, isInitialValid} = useFormikContext();
 	return (
 		<LoadingButton
 			variant="contained"
@@ -18,9 +18,14 @@ export default function SubmitButton(props: LoadingButtonProps) {
 				fontSize: "18px",
 				width: "100%",
 				height: "60px",
+				"&:disabled": {
+					backgroundColor: "rgba(133, 133, 133, 1)",
+					color: "white",
+				},
 
 				...props.sx,
 			}}
+			disabled={!(isValid || isInitialValid)}
 			onClick={submitForm}>
 			{props.children}
 		</LoadingButton>

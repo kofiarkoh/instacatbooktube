@@ -84,9 +84,9 @@ export default function Page() {
 				<Formik
 					initialValues={initialData}
 					validationSchema={valdiationSchema}
-					validateOnBlur={false}
-					validateOnMount={false}
-					validateOnChange={false}
+					validateOnBlur={true}
+					validateOnMount={true}
+					validateOnChange={true}
 					onSubmit={handleLogin}>
 					<>
 						<div>

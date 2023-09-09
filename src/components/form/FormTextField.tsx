@@ -17,7 +17,6 @@ export default function FormTextField(props: FormTextFieldProps) {
 			setAnimate(true);
 			setTimeout(() => {
 				setAnimate(false);
-				helpers.setError(undefined);
 			}, 1000);
 		}
 	}, [meta.error]);
