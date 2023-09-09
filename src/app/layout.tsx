@@ -6,9 +6,11 @@ import "@fontsource/roboto/700.css";
 import {Provider} from "react-redux";
 
 import {ThemeProvider, createTheme} from "@mui/material/styles";
-import "./globals.css";
 import "animate.css";
+import {ToastContainer, Zoom} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {reduxStore} from "../redux/store";
+import "./globals.css";
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
@@ -25,7 +27,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 							},
 						},
 					})}>
-					<body>{children}</body>
+					<body>
+						{children} <ToastContainer transition={Zoom} />
+					</body>
 				</ThemeProvider>
 			</Provider>
 		</html>
