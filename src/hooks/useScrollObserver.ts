@@ -22,8 +22,8 @@ export const useScrollObserver = () => {
 		rootMargin: "0px",
 	});
 
-	const registerObserver = (target: any) => {
-		observerTarget.current = target;
+	const decreasePage = () => {
+		setPage(page - 1);
 	};
 
 	useEffect(() => {
@@ -38,5 +38,5 @@ export const useScrollObserver = () => {
 		};
 	}, [observerTarget]);
 
-	return [page, observerTarget] as const;
+	return [page, decreasePage, observerTarget] as const;
 };

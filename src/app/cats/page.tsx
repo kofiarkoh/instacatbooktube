@@ -18,14 +18,19 @@ export default function Page(props: any) {
 	const [getCats, {data: cats, isLoading, isFetching}] = useLazyGetCatsQuery();
 
 	const [dialogVisible, setDialogVisible] = useState(false);
-	const [page, observerTarget] = useScrollObserver();
+	const [page, decreasePage, observerTarget] = useScrollObserver();
 	const router = useRouter();
 	const [logout] = useLogout();
 	const [favorites, isLoadingFavorites] = useLoadFavourites();
 	//const observerTarget = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		getCats(page);
+		getCats(page)
+			.unwrap()
+			.catch((e: any) => {
+				// revert page number should request fail
+				decreasePage();
+			});
 	}, [page, favorites]);
 
 	const goToFavorites = () => {
